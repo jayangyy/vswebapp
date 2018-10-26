@@ -4,11 +4,20 @@
     <meta charset="utf-8" />
     <title></title>
     <link href="Scripts/jquery-easyui-1.6.6/themes/bootstrap/easyui.css" rel="stylesheet" />
-    <!--<link href="Scripts/jquery-easyui-1.6.6/themes/color.css" rel="stylesheet" />-->
-    <!--<link href="Scripts/jquery-easyui-1.6.6/themes/icon.css" rel="stylesheet" />-->
+    <!--<link href="Scripts/jquery-easyui-1.6.6/themes/default/easyui.css" rel="stylesheet" />-->
+    <!--<link href="Scripts/jquery-easyui-1.6.6/themes/metro/easyui.css" rel="stylesheet" />-->
+    <!--<link href="Scripts/jquery-easyui-1.6.6/themes/gray/easyui.css" rel="stylesheet" />-->
+    <!--<link href="Scripts/jquery-easyui-1.6.6/themes/black/easyui.css" rel="stylesheet" />-->
+    <!--<link href="Scripts/jquery-easyui-1.6.6/themes/material/easyui.css" rel="stylesheet" />-->
+    <!--<link href="Scripts/jquery-easyui-1.6.6/themes/material-teal/easyui.css" rel="stylesheet" />-->
+    <link href="Scripts/jquery-easyui-1.6.6/themes/color.css" rel="stylesheet" />
+    <link href="Scripts/jquery-easyui-1.6.6/themes/icon.css" rel="stylesheet" />
+    <!--<link href="Scripts/jquery-easyui-1.6.6/themes/vue.css" rel="stylesheet" />-->
+    <!--<link href="Scripts/jquery-easyui-1.6.6/themes/bootstrap/linkbutton.css" rel="stylesheet" />-->
     <script src="Scripts/jquery-3.3.1.js"></script>
     <script src="Scripts/jquery-easyui-1.6.6/jquery.easyui.min.js"></script>
     <script src="Scripts/jquery-easyui-1.6.6/locale/easyui-lang-zh_CN.js"></script>
+    <script src="Scripts/jquery-easyui-1.6.6/jquery.easyui.theme.v1.js"></script>
     <script src="Scripts/base.js"></script>
 </head>
 <body>
@@ -20,12 +29,12 @@
                     { field: 'id', title: 'Code', width: 100 },
                     { field: 'name', title: 'Name', width: 100 },
                     { field: 'telephone', title: 'Price', width: 100, align: 'right' }
-                ]]
+                ]], onBack: function () { alert("我是回调函数") }, onBefor: function () { return true; }
             };
             $("#table").extGrid(obj);
         })
     </script>
-    <table id="table" saveurl="/home/addPer" editurl="/HtmlPage3.html" removeurl="/home/delPer"></table>
+    <a href="#" class="easyui-linkbutton" data-options="iconCls:'icon-add'" style="width:80px">Search</a>
     <select class="easyui-combobox" name="state" label="State:" labelPosition="top" style="width:100%;">
         <option value="AL">Alabama</option>
         <option value="AK">Alaska</option>
@@ -78,5 +87,7 @@
         <option value="WI">Wisconsin</option>
         <option value="WY">Wyoming</option>
     </select>
+    <table id="table" saveurl="/home/addPer" editurl="/Home/View1" removeurl="/home/delPer"></table>
+
 </body>
 </html>

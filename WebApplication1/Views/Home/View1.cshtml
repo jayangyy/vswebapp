@@ -1,0 +1,36 @@
+﻿
+@{
+    ViewBag.Title = "View";
+}
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title></title>
+</head>
+<body>
+    @*<script src="Scripts/jquery-3.3.1.js"></script>*@
+    <script type="text/javascript">
+        $(function () {
+            if('@ViewBag.Message'.length>0)
+            {
+                var id='@ViewBag.Message';
+                    $.getJSON('/Home/getPerByNo?id='+id,'',function(data){
+                        $("#name").val(data.name);
+                        $("#telephone").val(data.telephone)
+                    })
+
+            }
+        })
+    </script>
+    <form>
+        <table>
+            <tr><th>姓名</th><td><input type="text" id="name" name="name" /></td></tr>
+            <tr><th>电话</th><td><input type="text" id="telephone" name="telephone" /></td></tr>
+        </table>
+        <input type="hidden" id="id" name="id" value="@ViewBag.Message"/>
+    </form>
+</body>
+</html>
+

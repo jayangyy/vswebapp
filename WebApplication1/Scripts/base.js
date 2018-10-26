@@ -655,7 +655,6 @@
         ///EASYUI 扩展
         ///DATAGRID扩展
         extGrid: function (option) {
-            debugger;
             var _this = $(this);
             var tool = null;
             //判断是否有TOOL，默认为NULL 
@@ -683,6 +682,7 @@
                                 } else {
                                     option1.removeurl = _this.attr("removeurl");
                                 }
+                                
                                 if (option1.removeurl != undefined) {
                                     _this.gridRemove(option1);
                                 }
@@ -706,6 +706,9 @@
                                 }
                                 if (option.onBefor) {
                                     options.onBefor = option.onBefor;
+                                }
+                                if (option.onBack) {
+                                    options.onBack = option.onBack
                                 }
                                 if (option.dwidth) {
                                     options.width = option.dwidth;
@@ -732,6 +735,12 @@
                                 }
                                 if (option.saveurl) {
                                     options.saveurl = option.saveurl;
+                                }
+                                if (option.onBack) {
+                                    options.onBack = option.onBack
+                                }
+                                if (option.onBefor) {
+                                    options.onBefor = option.onBefor;
                                 }
                                 _this.gridEdit(options);
                             }
@@ -1084,7 +1093,6 @@
                     });
                 } else {
                     sltRow = $(_this).datagrid("getSelections");
-                    ;
                     if (sltRow == null) {
                         top.$.messager.alert("系统提示", "请选择一条记录进行操作!", "warning");
                         return;

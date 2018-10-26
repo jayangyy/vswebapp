@@ -36,6 +36,13 @@ namespace WebApplication1.Controllers
             return View();
         }
 
+        public ActionResult View1(String id="")
+        {
+            ViewBag.Message =id;
+
+            return View();
+        }
+
 
         //分页
         [HttpPost]
@@ -62,9 +69,22 @@ namespace WebApplication1.Controllers
             }
             else
             {
-               
+                var record = pers.Where(m => m.id == model.id).FirstOrDefault();
+                if (record != null)
+                {
+                    pers.Remove(record);
+                    record.name = model.name;
+                    record.telephone = model.telephone;
+                    pers.Add(record);
+                }
             }
             return Json(result);
+        }
+        //分页
+        [HttpGet]
+        public JsonResult getPerByNo(Persons model)
+        {
+           return Json(pers.Where(m => m.id == model.id).FirstOrDefault(), JsonRequestBehavior.AllowGet);
         }
         //分页
         [HttpPost]
@@ -74,9 +94,13 @@ namespace WebApplication1.Controllers
         }
         //分页
         [HttpPost]
-        public void delPer(String model)
+        public JsonResult delPer(List<String> param)
         {
-             pers.Remove(pers.Where(m=>m.id==model).FirstOrDefault());
+             pers.Remove(pers.Where(m=>m.id== param[0]).FirstOrDefault());
+            DataModel result = new DataModel();
+            result.result = true;
+            result.info = "成功";
+            return Json(result);
         }
     }
 }
