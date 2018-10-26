@@ -1,0 +1,219 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0" />
+    <meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+    <title>需求任务列表frm</title>
+    <link rel="stylesheet" type="text/css" href="../../css/aui.css" />
+    <link rel="stylesheet" type="text/css" href="../../css/aui-flex.css" />
+    <link rel="stylesheet" type="text/css" href="../../css/thisui.css" />
+    <style>
+        .detail {
+            padding: 0.75rem;
+            background: #FFFFFF;
+            font-size: 0.7rem;
+            margin-bottom: 0.5rem;
+        }
+
+        input[type="text"], input[type="email"] {
+            border: 1px #DDDDDD solid;
+            border-radius: 0.25rem;
+            height: 1.75rem;
+        }
+    </style>
+</head>
+<body>
+    <div class="aui-content" id="bidForm" v-cloak>
+        <div class="detail">
+            <div class="aui-font-size-16">{{detailData.title}}</div>
+            <div class="aui-margin-t-5">
+                <span>工时：{{detailData.workload}}</span>
+                <span class="aui-margin-l-15">定价：</span><span class="aui-text-danger aui-font-size-16">{{detailData.price}}</span>元
+            </div>
+        </div>
+        <form id="submit_bid_from" encType=”multipart/form-data”>
+            <div class="detail">
+                <div class="aui-flex-col aui-flex-middle aui-font-size-14 aui-margin-b-15">
+                    <div class="aui-flex-item-4 aui-text-right aui-padded-r-15">投标人：</div>
+                    <div class="aui-flex-item-7">
+                        <input type="text" v-model.trim="userinfo.user_true_name" id="user_name" name="user_name" placeholder="填写姓名">
+                        <!-- //<input type="text"  v-bind:userinfo.user_true_name/> -->
+                    </div>
+                    <div class="aui-flex-item-1"></div>
+                </div>
+                <div class="aui-flex-col aui-flex-middle aui-font-size-14 aui-margin-b-15">
+                    <div class="aui-flex-item-4 aui-text-right aui-padded-r-15">E-mail：</div>
+                    <div class="aui-flex-item-7"><input type="email" v-model.trim="userinfo.user_email" id="email" name="email" placeholder="填写email" /></div>
+                    <div class="aui-flex-item-1"></div>
+                </div>
+                <div class="aui-flex-col aui-flex-middle aui-font-size-14 aui-margin-b-15">
+                    <div class="aui-flex-item-4 aui-text-right aui-padded-r-15">电话：</div>
+                    <div class="aui-flex-item-7"><input type="text" v-validate="'required'" v-model.trim="userinfo.user_tell" id="bid_phone" name="bid_phone" placeholder="填写电话" /></div>
+                    <div class="aui-flex-item-1"></div>
+                </div>
+                <div class="aui-flex-col aui-flex-middle aui-font-size-14 aui-margin-b-15">
+                    <div class="aui-flex-item-4 aui-text-right aui-padded-r-15">地址：</div>
+                    <div class="aui-flex-item-7"><input type="text" v-model.trim="userinfo.useraddr[0].addr_street" id="user_addr" name="user_addr" placeholder="填写地址" /></div>
+                    <div class="aui-flex-item-1"></div>
+                </div>
+                <div class="aui-flex-col aui-flex-middle aui-font-size-14 aui-margin-b-15">
+                    <div class="aui-flex-item-4 aui-text-right aui-padded-r-15">备注：</div>
+                    <div class="aui-flex-item-7"><input type="text" placeholder="填写备注" id="bid_cmt" name="bid_cmt" /></div>
+                    <div class="aui-flex-item-1"></div>
+                </div>
+                <div class="aui-flex-col aui-flex-middle aui-font-size-14 aui-margin-b-15">
+                    <div class="aui-flex-item-4 aui-text-right aui-padded-r-15">投标资料：</div>
+                    <div class="aui-flex-item-7">
+                        <input type="file" id="fileUpload" name="fileUpload" />
+                        <input type="hidden" id="bid_file_url" name="bid_file_url" />
+                        <input type="hidden" id="demand_code" v-model="demand_code" name="demand_code" />
+                        <input type="hidden" id="user_code" name="user_code" v-model="user_code" />
+                        <input type="hidden" id="bid_status" name="bid_status" value="0" />
+                        <input type="hidden" id="bid_status_cmt" name="bid_status_cmt" value="" />
+                        <input type="hidden" id="bid_name" name="bid_name" v-model="detailData.title" value="" />
+                        <input type="hidden" id="bid_price" name="bid_price" value="0" v-model="detailData.price" />
+                    </div>
+                    <div class="aui-flex-item-1"></div>
+                    <input type="button" text="tetete" value="test" onclick="savedBid()" />
+                </div>
+            </div>
+        </form>
+
+        <!-- <footer class="aui-bar aui-bar-tab" id="footer">
+                <div v-on:click="savebid" class="aui-bar-tab-item aui-bg-danger aui-text-white" tapmode style="width: auto;">确认投标</div>
+        </footer> -->
+    </div>
+</body>
+<script type="text/javascript" src="../../script/vue.min.js"></script>
+<script type="text/javascript" src="../../script/api.js"></script>
+<script type="text/javascript" src="../../script/jquery.min.js"></script>
+<script type="text/javascript" src="../../script/this.js"></script>
+<script type="text/javascript">
+
+    apiready = function () {
+        vm.initList();
+        initRequireDetails1();
+    };
+    var userinfo = JSON.parse(localStorage.user);
+    //={user_true_name:'张中和',user_tell:'15198086542',user_email:'jayang1234@163.com',useraddr:[{addr_street:'四川省成都市人民南路一段2号'}]};
+    var vm = new Vue({
+        el: '#bidForm',
+        data: {
+            detailData: {},
+            userinfo: userinfo,
+            demand_code: '',
+            user_code: localStorage.usercode
+            //,
+            //	demand_code:api.pageParam.id
+        },
+        mounted: function () {
+        },
+        methods: {
+            initList: function () {
+                //vm.detailData=requireDetailData;
+            }
+        }
+    });
+    function initParams(data) {
+        var param = {};
+        $.each(data, function (index, item) {
+            param[item.name] = item.value;
+        })
+        return param;
+    }
+    function savedBid() {
+        var fs = '';
+        var fileBrowser = api.require('fileBrowser');
+
+        fileBrowser.open(function (ret, err) {
+
+            if (ret) {
+                fileBrowser.close();
+                alert(ret.url)
+                fs = ret.url;
+                alert(JSON.stringify(ret));
+                api.showProgress();
+                var formdata = $("#submit_bid_from").serializeArray();
+                //	alert($(document.getElementById('fileUpload').files[0]).val())
+                api.ajax({
+                    url: dataurl + 'bid/addBid',
+                    method: 'post', report: true,
+                    data: {
+                        values: initParams(formdata),
+                        //	stream:$("#fileUpload").val()
+                        files: {
+                            file: fs
+                            //$("#fileUpload").val()
+                        }
+                    }
+                }, function (ret, err) {
+                    if (ret.result) {
+                        openNormalWin('my_bid_win', 'my/my_bid_win');
+                        //  alert( JSON.stringify( ret ) );
+                    } else {
+                        alert(JSON.stringify(err));
+                    }
+                });
+            } else {
+
+                alert(JSON.stringify(err));
+
+            }
+
+        });
+        //alert(api.fsDir)
+        //	alert(api.boxDir)
+        //	alert($("#fileUpload").val())
+        // 	var fs = api.require('fs');
+        // fs.readDir({
+        //     path: $("#fileUpload").val()
+        // }, function(ret, err) {
+        //     if (ret.status) {
+        //         alert(JSON.stringify(ret));
+        //     } else {
+        //         alert(JSON.stringify(err));
+        //     }
+        //  });
+
+        // var files = document.getElementById('fileUpload').files[0];//file对象，表示单个上传文件
+        // var myForm=new FormData();
+        // myForm.append("file",document.getElementById('fileUpload').files[0])
+        // alert(document.getElementById('fileUpload').files[0].path)
+        // 	$.ajax({
+        // 		    url:'http://192.168.0.108:9010/bid/addBid',
+        // 		    type: 'POST',
+        // 		    cache: false,
+        // 		    data: myForm,
+        // 		    processData: false,
+        // 		    contentType: false,
+        // 		    success: function (result) {
+        // 		    	alert(result);
+        // 		    },
+        // 		    error: function (err) {
+        // 					alert(err)
+        // 		    }
+        // 		});
+    }
+    function initRequireDetails1() {
+        vm.demand_code = api.pageParam.id;
+        api.ajax({
+            url: dataurl + 'liberate/getDemApp/' + api.pageParam.id,
+            method: 'get',
+            data: {
+                values: {
+                    id1: '1'
+                }
+            }
+        }, function (ret, err) {
+            if (ret.result) {
+                vm.detailData = $.extend({}, vm.detailData, ret.rows);
+            } else {
+                alert(ret.message);
+            }
+        });
+
+
+    }
+</script>
+</html>
